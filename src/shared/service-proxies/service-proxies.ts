@@ -135,8 +135,8 @@ export class BookServiceProxy {
     /**
      * @return Success
      */
-    searchBook(input: SearchBookInput): Observable<SearchBookOutput> {
-        let url_ = this.baseUrl + "/api/services/app/Book/SearchBook";
+    createBook(input: CreateBookInput): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Book/CreateBook";
 
         const content_ = JSON.stringify(input ? input.toJS() : null);
         
@@ -148,77 +148,22 @@ export class BookServiceProxy {
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processSearchBook(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processSearchBook(response));
-                } catch (e) {
-                    return <Observable<SearchBookOutput>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<SearchBookOutput>><any>Observable.throw(response);
-        });
-    }
-
-    protected processSearchBook(response: Response): SearchBookOutput {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            let result200: SearchBookOutput = null;
-            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? SearchBookOutput.fromJS(resultData200) : new SearchBookOutput();
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    createBook(input: CreateBookInput): Observable<void> {
-        console.log('createBook service proxy fired');
-        let url_ = this.baseUrl + "/api/services/app/Book/CreateBook";
-
-        const content_ = JSON.stringify(input ? input.toJS() : null);
-        console.log(content_);
-        return this.http.request(url_, {
-
-          
-            body: content_,
-            method: "post",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            console.log("call processCreateBook");
             return this.processCreateBook(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    console.log("call processCreateBook1");
                     return Observable.of(this.processCreateBook(response));
                 } catch (e) {
-                    console.log("call processCreateBook2");
                     return <Observable<void>><any>Observable.throw(e);
                 }
             } else
-                console.log("call processCreateBook3");
                 return <Observable<void>><any>Observable.throw(response);
-            });
-
-
+        });
     }
 
     protected processCreateBook(response: Response): void {
         const responseText = response.text();
         const status = response.status; 
-        console.log("status in processCreateBook");
-        console.log(status);
 
         if (status === 200) {
             return null;
@@ -231,7 +176,7 @@ export class BookServiceProxy {
     /**
      * @return Success
      */
-    getBooks(maxResultCount: number, skipCount: number, userId: number): Observable<GetBooksOutput> {
+    getBooks(maxResultCount: number, skipCount: number, userId: number, filter: string): Observable<GetBooksOutput> {
         let url_ = this.baseUrl + "/api/services/app/Book/GetBooks?";
         if (maxResultCount !== undefined)
         
@@ -243,7 +188,11 @@ export class BookServiceProxy {
         
         if (userId !== undefined)
         
-            url_ += "UserId=" + encodeURIComponent("" + userId) + "&";
+            url_ += "UserId=" + encodeURIComponent("" + userId) + "&"; 
+        
+        if (filter !== undefined)
+        
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&";
 
         const content_ = "";
         
@@ -269,6 +218,65 @@ export class BookServiceProxy {
     }
 
     protected processGetBooks(response: Response): GetBooksOutput {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: GetBooksOutput = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? GetBooksOutput.fromJS(resultData200) : new GetBooksOutput();
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    getMyBooks(maxResultCount: number, skipCount: number, userId: number, filter: string): Observable<GetBooksOutput> {
+        let url_ = this.baseUrl + "/api/services/app/Book/GetMyBooks?";
+        if (maxResultCount !== undefined)
+        
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&"; 
+        
+        if (skipCount !== undefined)
+        
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        
+        if (userId !== undefined)
+        
+            url_ += "UserId=" + encodeURIComponent("" + userId) + "&"; 
+        
+        if (filter !== undefined)
+        
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "get",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processGetMyBooks(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processGetMyBooks(response));
+                } catch (e) {
+                    return <Observable<GetBooksOutput>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<GetBooksOutput>><any>Observable.throw(response);
+        });
+    }
+
+    protected processGetMyBooks(response: Response): GetBooksOutput {
         const responseText = response.text();
         const status = response.status; 
 
@@ -327,11 +335,11 @@ export class BookServiceProxy {
     /**
      * @return Success
      */
-    deleteBook(bookId: number): Observable<void> {
+    deleteBook(id: number): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Book/DeleteBook?";
-        if (bookId !== undefined)
+        if (id !== undefined)
         
-            url_ += "BookId=" + encodeURIComponent("" + bookId) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
 
         const content_ = "";
         
@@ -1081,30 +1089,36 @@ export class RegisterOutput {
     }
 }
 
-export class SearchBookInput { 
-    authorName: string; 
+export class CreateBookInput { 
     isbn: string; 
+    title: string; 
     summary: string; 
-    year: number;
+    authorName: string; 
+    year: number; 
+    imageLink: string;
     constructor(data?: any) {
         if (data !== undefined) {
-            this.authorName = data["authorName"] !== undefined ? data["authorName"] : null;
             this.isbn = data["isbn"] !== undefined ? data["isbn"] : null;
+            this.title = data["title"] !== undefined ? data["title"] : null;
             this.summary = data["summary"] !== undefined ? data["summary"] : null;
+            this.authorName = data["authorName"] !== undefined ? data["authorName"] : null;
             this.year = data["year"] !== undefined ? data["year"] : null;
+            this.imageLink = data["imageLink"] !== undefined ? data["imageLink"] : null;
         }
     }
 
-    static fromJS(data: any): SearchBookInput {
-        return new SearchBookInput(data);
+    static fromJS(data: any): CreateBookInput {
+        return new CreateBookInput(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        data["authorName"] = this.authorName !== undefined ? this.authorName : null;
         data["isbn"] = this.isbn !== undefined ? this.isbn : null;
+        data["title"] = this.title !== undefined ? this.title : null;
         data["summary"] = this.summary !== undefined ? this.summary : null;
+        data["authorName"] = this.authorName !== undefined ? this.authorName : null;
         data["year"] = this.year !== undefined ? this.year : null;
+        data["imageLink"] = this.imageLink !== undefined ? this.imageLink : null;
         return data; 
     }
 
@@ -1114,33 +1128,36 @@ export class SearchBookInput {
 
     clone() {
         const json = this.toJSON();
-        return new SearchBookInput(JSON.parse(json));
+        return new CreateBookInput(JSON.parse(json));
     }
 }
 
-export class SearchBookOutput { 
-    bookResults: BookDto[];
+export class GetBooksOutput { 
+    books: BookDto[]; 
+    totalCount: number;
     constructor(data?: any) {
         if (data !== undefined) {
-            if (data["bookResults"] && data["bookResults"].constructor === Array) {
-                this.bookResults = [];
-                for (let item of data["bookResults"])
-                    this.bookResults.push(BookDto.fromJS(item));
+            if (data["books"] && data["books"].constructor === Array) {
+                this.books = [];
+                for (let item of data["books"])
+                    this.books.push(BookDto.fromJS(item));
             }
+            this.totalCount = data["totalCount"] !== undefined ? data["totalCount"] : null;
         }
     }
 
-    static fromJS(data: any): SearchBookOutput {
-        return new SearchBookOutput(data);
+    static fromJS(data: any): GetBooksOutput {
+        return new GetBooksOutput(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        if (this.bookResults && this.bookResults.constructor === Array) {
-            data["bookResults"] = [];
-            for (let item of this.bookResults)
-                data["bookResults"].push(item.toJS());
+        if (this.books && this.books.constructor === Array) {
+            data["books"] = [];
+            for (let item of this.books)
+                data["books"].push(item.toJS());
         }
+        data["totalCount"] = this.totalCount !== undefined ? this.totalCount : null;
         return data; 
     }
 
@@ -1150,7 +1167,7 @@ export class SearchBookOutput {
 
     clone() {
         const json = this.toJSON();
-        return new SearchBookOutput(JSON.parse(json));
+        return new GetBooksOutput(JSON.parse(json));
     }
 }
 
@@ -1161,6 +1178,7 @@ export class BookDto {
     title: string; 
     userId: number; 
     year: number; 
+    imageLink: string; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
@@ -1170,6 +1188,7 @@ export class BookDto {
             this.title = data["title"] !== undefined ? data["title"] : null;
             this.userId = data["userId"] !== undefined ? data["userId"] : null;
             this.year = data["year"] !== undefined ? data["year"] : null;
+            this.imageLink = data["imageLink"] !== undefined ? data["imageLink"] : null;
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
@@ -1186,6 +1205,7 @@ export class BookDto {
         data["title"] = this.title !== undefined ? this.title : null;
         data["userId"] = this.userId !== undefined ? this.userId : null;
         data["year"] = this.year !== undefined ? this.year : null;
+        data["imageLink"] = this.imageLink !== undefined ? this.imageLink : null;
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }
@@ -1200,93 +1220,21 @@ export class BookDto {
     }
 }
 
-export class CreateBookInput { 
-    isbn: string; 
-    title: string; 
-    summary: string; 
-    authorName: string; 
-    year: number;
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.isbn = data["isbn"] !== undefined ? data["isbn"] : null;
-            this.title = data["title"] !== undefined ? data["title"] : null;
-            this.summary = data["summary"] !== undefined ? data["summary"] : null;
-            this.authorName = data["authorName"] !== undefined ? data["authorName"] : null;
-            this.year = data["year"] !== undefined ? data["year"] : null;
-        }
-    }
-
-    static fromJS(data: any): CreateBookInput {
-        return new CreateBookInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["isbn"] = this.isbn !== undefined ? this.isbn : null;
-        data["title"] = this.title !== undefined ? this.title : null;
-        data["summary"] = this.summary !== undefined ? this.summary : null;
-        data["authorName"] = this.authorName !== undefined ? this.authorName : null;
-        data["year"] = this.year !== undefined ? this.year : null;
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new CreateBookInput(JSON.parse(json));
-    }
-}
-
-export class GetBooksOutput { 
-    books: BookDto[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            if (data["books"] && data["books"].constructor === Array) {
-                this.books = [];
-                for (let item of data["books"])
-                    this.books.push(BookDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): GetBooksOutput {
-        return new GetBooksOutput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        if (this.books && this.books.constructor === Array) {
-            data["books"] = [];
-            for (let item of this.books)
-                data["books"].push(item.toJS());
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new GetBooksOutput(JSON.parse(json));
-    }
-}
-
 export class UpdateBookInput { 
-    bookId: number; 
+    id: number; 
+    title: string; 
     isbn: string; 
     summary: string; 
-    year: number;
+    year: number; 
+    imageLink: string;
     constructor(data?: any) {
         if (data !== undefined) {
-            this.bookId = data["bookId"] !== undefined ? data["bookId"] : null;
+            this.id = data["id"] !== undefined ? data["id"] : null;
+            this.title = data["title"] !== undefined ? data["title"] : null;
             this.isbn = data["isbn"] !== undefined ? data["isbn"] : null;
             this.summary = data["summary"] !== undefined ? data["summary"] : null;
             this.year = data["year"] !== undefined ? data["year"] : null;
+            this.imageLink = data["imageLink"] !== undefined ? data["imageLink"] : null;
         }
     }
 
@@ -1296,10 +1244,12 @@ export class UpdateBookInput {
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        data["bookId"] = this.bookId !== undefined ? this.bookId : null;
+        data["id"] = this.id !== undefined ? this.id : null;
+        data["title"] = this.title !== undefined ? this.title : null;
         data["isbn"] = this.isbn !== undefined ? this.isbn : null;
         data["summary"] = this.summary !== undefined ? this.summary : null;
         data["year"] = this.year !== undefined ? this.year : null;
+        data["imageLink"] = this.imageLink !== undefined ? this.imageLink : null;
         return data; 
     }
 

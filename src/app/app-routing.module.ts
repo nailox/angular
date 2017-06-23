@@ -7,6 +7,8 @@ import { AboutComponent } from './about/about.component';
 import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { NewFormComponent } from './book/new-form.component';
+import { ListComponent } from './list/list.component';
+import { MyBooksComponent } from './list/my-books.component';
 
 @NgModule({
     imports: [
@@ -19,7 +21,9 @@ import { NewFormComponent } from './book/new-form.component';
                     { path: 'users', component: UsersComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
                     { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
                     { path: 'about', component: AboutComponent },
-                    { path: 'new', component: NewFormComponent } //TODO: add permission
+                    { path: 'new', component: NewFormComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
+                    { path: 'all', component: ListComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard]},
+                    { path: 'mybooks', component: MyBooksComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] } 
                 ]
             }
         ])

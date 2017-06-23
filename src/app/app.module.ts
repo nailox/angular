@@ -23,8 +23,13 @@ import { CreateUserModalComponent } from '@app/users/create-user-modal.component
 import { TenantsComponent } from '@app/tenants/tenants.component';
 import { CreateTenantModalComponent } from '@app/tenants/create-tenant-modal.component';
 import { NewFormComponent } from '@app/book/new-form.component.ts';
-import { BookServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BookServiceProxy} from '@shared/service-proxies/service-proxies';
 import { ListComponent } from '@app/list/list.component';
+import { PaginationModule } from 'ngx-bootstrap';
+import { EditBookModalComponent } from '@app/list/edit-book-modal.component';
+import { MyBooksComponent } from './list/my-books.component';
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -35,7 +40,9 @@ import { ListComponent } from '@app/list/list.component';
         TenantsComponent,
         CreateTenantModalComponent,
         NewFormComponent,
-        ListComponent
+        ListComponent,
+        EditBookModalComponent,
+        MyBooksComponent
     ],
     imports: [
         CommonModule,
@@ -46,10 +53,13 @@ import { ListComponent } from '@app/list/list.component';
         AbpModule,
         AppRoutingModule,
         ServiceProxyModule,
-        SharedModule
+        SharedModule,
+        PaginationModule.forRoot()
+        
     ],
     providers: [
         BookServiceProxy
+   
     ]
 })
 export class AppModule { }

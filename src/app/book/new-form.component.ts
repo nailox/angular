@@ -1,9 +1,9 @@
 ﻿import { Component, Injector, AfterViewInit, OnInit, ElementRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { Book } from './book';
 import { BookServiceProxy, CreateBookInput, UserLoginInfoDto } from '@shared/service-proxies/service-proxies';
 import { AbpSessionService } from '@abp/session/abp-session.service';
+import {NgForm} from '@angular/forms';
 
 //TODO: add localization and validation
 
@@ -14,15 +14,14 @@ import { AbpSessionService } from '@abp/session/abp-session.service';
 })
 export class NewFormComponent extends AppComponentBase  {
 
-    private _user: UserLoginInfoDto;
-    nameInput: ElementRef;
- 
-    shownLoginName = this.appSession.getShownLoginName();
 
-   
+    nameInput: ElementRef;
+
+    name = this.appSession.user.name;
+
     book = new CreateBookInput({
 
-        'authorName': this.shownLoginName
+        'authorName': this.name
     });
 
    
@@ -30,20 +29,21 @@ export class NewFormComponent extends AppComponentBase  {
    constructor(
         injector: Injector,
         private _bookService: BookServiceProxy,
-        private _sessionService: AbpSessionService
-       
+        private _sessionService: AbpSessionService,
+ 
     ) {
         super(injector);
     }
 
+   saveBook(bookForm:NgForm): void {
 
-
-   saveBook(): void {
+       console.log(this.book.imageLink)
 
        this._bookService.createBook(this.book).subscribe(() => {
            this.notify.info(this.l('SavedSuccessfully'));
+            bookForm.resetForm();
        });
-       console.log('new-form service fired');
+     
 
    }
     

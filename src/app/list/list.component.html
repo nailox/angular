@@ -1,1 +1,98 @@
-﻿
+﻿<div class="form">
+    <form class="horizontal-form">
+        <div class="form-body">
+          
+                    <div class="inputs inputs-full-width">
+                        <div class="portlet-input">
+                            <div class="input-group">
+                                <input [(ngModel)]="filter" name="filter" autoFocus class="form-control" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                <span class="input-group-btn">
+                                    <button (click)="getBooks()" class="btn default" type="submit"><i class="icon-magnifier"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+             
+        </div>
+    </form>
+</div>
+<br>  
+<br>
+<div class="list-group">
+  <div class="row">
+    <div *ngFor="let book of books"  >
+      <div class="col-md-6 list-group-item eq">
+     <!--//fgs-->
+     <div class="row " >
+     <div class="col-md-6 eq" style="width: 35%;">
+         <img src="{{book.imageLink}}" height="279" width="184" style="border:10px">
+         Rating:
+         <br>  
+          <br>
+         <div>
+  <span>   
+          <button *ngIf="isGranted('Edit')" title="Click here to edit book details" (click)="editBookModal.show(book)"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+       </span>
+        
+      <span>   
+          <button *ngIf="isGranted('Delete')" title="Click here to delete book"  (click)="delete(book.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+        </span>   
+
+        </div>
+         </div>
+  
+   <div class="col-md-6 eq" style="position:relative">    
+
+       
+     <p class="bookTitle"> {{book.title}}</p> 
+     by {{book.authorName}} (Author)
+      
+        <br>
+        published: {{book.year}}
+        <br>
+        <br>
+       
+       <p class="bookSummary">Summary:</p>
+      <div class="summary"> {{book.summary}} </div>
+       <br>
+
+          ISBN:   {{book.isbn}}
+        <br />
+    
+       
+         
+
+
+       
+       <br />
+        <br />
+    </div>   
+    <!--end col-md for details-->
+    </div>
+      </div>
+      </div>
+  </div>
+
+ 
+
+ 
+
+  <editBookModal #editBookModal (modalSave)="getBooks()"></editBookModal>
+  </div>
+<div class="paging">  
+   <pagination  [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
+
+ </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

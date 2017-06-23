@@ -3364,7 +3364,7 @@
     },
     "ngx-bootstrap": {
       "version": "1.6.6",
-      "from": "ngx-bootstrap@>=1.6.6 <2.0.0",
+      "from": "https://registry.npmjs.org/ngx-bootstrap/-/ngx-bootstrap-1.6.6.tgz",
       "resolved": "https://registry.npmjs.org/ngx-bootstrap/-/ngx-bootstrap-1.6.6.tgz"
     },
     "no-case": {

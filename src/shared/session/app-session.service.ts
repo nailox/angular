@@ -36,11 +36,11 @@ export class AppSessionService {
 
     getShownLoginName(): string {
         let userName = this._user.userName;
-     //   if (!this._abpMultiTenancyService.isEnabled) {
+        if (!this._abpMultiTenancyService.isEnabled) {
             return userName;
-     //   }
+     }
 
-      //  return (this._tenant ? this._tenant.tenancyName : ".") + "\\" + userName;
+       return (this._tenant ? this._tenant.tenancyName : ".") + "\\" + userName;
     }
 
     init(): Promise<boolean> {

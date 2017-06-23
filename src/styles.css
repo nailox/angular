@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+
+.buttons {
+    position: absolute;
+    bottom: 0
+}
+
+.bookTitle{
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.bookSummary{
+    font-weight: bold;
+}
+
+.paging {
+    width: 50%;
+     margin-left: auto;
+     margin-right: auto;
+}
+
+
+.summary{
+    width: 330px;
+    word-break: break-all;
+    min-height: 168px;
+}
+
+
+.eq{
+   min-height: 390px;
+}
