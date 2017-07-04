@@ -28,6 +28,7 @@ import { ListComponent } from '@app/list/list.component';
 import { PaginationModule } from 'ngx-bootstrap';
 import { EditBookModalComponent } from '@app/list/edit-book-modal.component';
 import { MyBooksComponent } from './list/my-books.component';
+import {StarRatingComponent} from './list/rating.component';
 
 
 @NgModule({
@@ -42,7 +43,9 @@ import { MyBooksComponent } from './list/my-books.component';
         NewFormComponent,
         ListComponent,
         EditBookModalComponent,
-        MyBooksComponent
+        MyBooksComponent,
+        StarRatingComponent
+        
     ],
     imports: [
         CommonModule,

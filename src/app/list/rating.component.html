@@ -1,0 +1,14 @@
+<div class="rating">
+    <span   *ngFor="let star of stars; let i=index" 
+            [class.star]="star.filled" 
+            (click)="toggle(i)">
+        <span   #starfilled (mouseenter)="OnMouseenter($event)" 
+                [style.color]="fillcolor" *ngIf="star.filled">
+                    &#9733;
+        </span>
+        <span   (mouseenter)="OnMouseenter($event)" 
+                *ngIf="!star.filled">
+                    &#9734;
+        </span>        
+    </span>
+</div>

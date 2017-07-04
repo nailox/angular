@@ -135,6 +135,50 @@ export class BookServiceProxy {
     /**
      * @return Success
      */
+    updateRating(input: UpdateRatingInput): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Book/UpdateRating";
+
+        const content_ = JSON.stringify(input ? input.toJS() : null);
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "put",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processUpdateRating(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processUpdateRating(response));
+                } catch (e) {
+                    return <Observable<boolean>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<boolean>><any>Observable.throw(response);
+        });
+    }
+
+    protected processUpdateRating(response: Response): boolean {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: boolean = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : null;
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
     createBook(input: CreateBookInput): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Book/CreateBook";
 
@@ -1089,6 +1133,37 @@ export class RegisterOutput {
     }
 }
 
+export class UpdateRatingInput { 
+    id: number; 
+    newRating: number;
+    constructor(data?: any) {
+        if (data !== undefined) {
+            this.id = data["id"] !== undefined ? data["id"] : null;
+            this.newRating = data["newRating"] !== undefined ? data["newRating"] : null;
+        }
+    }
+
+    static fromJS(data: any): UpdateRatingInput {
+        return new UpdateRatingInput(data);
+    }
+
+    toJS(data?: any) {
+        data = data === undefined ? {} : data;
+        data["id"] = this.id !== undefined ? this.id : null;
+        data["newRating"] = this.newRating !== undefined ? this.newRating : null;
+        return data; 
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toJS());
+    }
+
+    clone() {
+        const json = this.toJSON();
+        return new UpdateRatingInput(JSON.parse(json));
+    }
+}
+
 export class CreateBookInput { 
     isbn: string; 
     title: string; 
@@ -1179,6 +1254,7 @@ export class BookDto {
     userId: number; 
     year: number; 
     imageLink: string; 
+    rating: number; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
@@ -1189,6 +1265,7 @@ export class BookDto {
             this.userId = data["userId"] !== undefined ? data["userId"] : null;
             this.year = data["year"] !== undefined ? data["year"] : null;
             this.imageLink = data["imageLink"] !== undefined ? data["imageLink"] : null;
+            this.rating = data["rating"] !== undefined ? data["rating"] : null;
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
@@ -1206,6 +1283,7 @@ export class BookDto {
         data["userId"] = this.userId !== undefined ? this.userId : null;
         data["year"] = this.year !== undefined ? this.year : null;
         data["imageLink"] = this.imageLink !== undefined ? this.imageLink : null;
+        data["rating"] = this.rating !== undefined ? this.rating : null;
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }
@@ -1226,7 +1304,8 @@ export class UpdateBookInput {
     isbn: string; 
     summary: string; 
     year: number; 
-    imageLink: string;
+    imageLink: string; 
+    rating: number;
     constructor(data?: any) {
         if (data !== undefined) {
             this.id = data["id"] !== undefined ? data["id"] : null;
@@ -1235,6 +1314,7 @@ export class UpdateBookInput {
             this.summary = data["summary"] !== undefined ? data["summary"] : null;
             this.year = data["year"] !== undefined ? data["year"] : null;
             this.imageLink = data["imageLink"] !== undefined ? data["imageLink"] : null;
+            this.rating = data["rating"] !== undefined ? data["rating"] : null;
         }
     }
 
@@ -1250,6 +1330,7 @@ export class UpdateBookInput {
         data["summary"] = this.summary !== undefined ? this.summary : null;
         data["year"] = this.year !== undefined ? this.year : null;
         data["imageLink"] = this.imageLink !== undefined ? this.imageLink : null;
+        data["rating"] = this.rating !== undefined ? this.rating : null;
         return data; 
     }
 

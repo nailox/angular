@@ -52,11 +52,11 @@ export class MyBooksComponent extends AppComponentBase {
 
     delete(id: number): void {
      this.message.confirm(
-        'Are you sure you want to delete this book',
+      this.l('SureDelete'),
         isConfirmed => {
             if (isConfirmed) {
                 this._bookService.deleteBook(id).subscribe(() => {
-                    this.notify.info(this.l('SuccessfullyDeleted'));
+                    this.notify.info(this.l('DeletedSuccessfully'));
                        this.getMyBooks();
                 });
             }

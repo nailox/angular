@@ -4,28 +4,33 @@
   
 
     <div class="form-group form-md-line-input form-md-floating-label no-hint">
-      <input #nameInput class="form-control" type="text" placeholder="title" name="title" [(ngModel)]="book.title" #title='ngModel' required maxlength="32">
-    <div [hidden]="title.valid || title.pristine" class="alert alert-danger">Title is required</div>
+      
+      <input #nameInput class="form-control" type="text"  [placeholder]="l('Title')" name="title" [(ngModel)]="book.title" #title='ngModel' required maxlength="32">
+    <div [hidden]="title.valid || title.pristine" class="alert alert-danger">{{l("TitleIsRequired")}}</div>
     </div>
 
     <div class="form-group form-md-line-input form-md-floating-label no-hint">
-      <input class="form-control" type="text" placeholder="summary" name="summary" [(ngModel)]="book.summary" #summary='ngModel' required maxlength="300">
-     <div [hidden]="summary.valid || summary.pristine" class="alert alert-danger">Summary is required</div>
+      
+      <input class="form-control" type="text"  [placeholder]="l('Summary')" name="summary" [(ngModel)]="book.summary" #summary='ngModel' required maxlength="300">
+     <div [hidden]="summary.valid || summary.pristine" class="alert alert-danger">{{l("SummaryIsRequired")}}</div>
     </div>
 
     <div class="form-group form-md-line-input form-md-floating-label no-hint">
-      <input class="form-control" type="number" name="year" placeholder="year" [(ngModel)]="book.year" #year='ngModel' required >                
-    <div [hidden]="year.valid || year.pristine" class="alert alert-danger">Year of publish is required</div>
+    
+      <input class="form-control" type="number"  [placeholder]="l('Year')" name="year" [(ngModel)]="book.year" #year='ngModel' required >                
+    <div [hidden]="year.valid || year.pristine" class="alert alert-danger">{{l("YearOfPublishIsRequired")}}</div>
     </div>
 
     <div class="form-group form-md-line-input form-md-floating-label no-hint">
-      <input class="form-control" type="text" placeholder="isbn" name="isbn" [(ngModel)]="book.isbn" #isbn='ngModel' required pattern="(ISBN[-]*(1[03])*[ ]*(: ){0,1})*(([0-9Xx][- ]*){13}|([0-9Xx][- ]*){10})">
-      <div [hidden]="isbn.valid || isbn.pristine" class="alert alert-danger">ISBN is not in correct format</div>
+      
+      <input class="form-control" type="text"  placeholder="ISBN" name="isbn" [(ngModel)]="book.isbn" #isbn='ngModel' required pattern="(ISBN[-]*(1[03])*[ ]*(: ){0,1})*(([0-9Xx][- ]*){13}|([0-9Xx][- ]*){10})">
+      <div [hidden]="isbn.valid || isbn.pristine" class="alert alert-danger">{{l("ISBNIsNotInCorrectFormat")}}</div>
     </div>
 
  <div class="form-group form-md-line-input form-md-floating-label no-hint">
-      <input class="form-control"  type="text" placeholder="Link to book image" name="imageLink" [(ngModel)]="book.imageLink" #imageLink='ngModel' required pattern="^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$">
-      <div [hidden]="imageLink.valid || imageLink.pristine" class="alert alert-danger">Image link supports only .jpg, .gif and .png formats. Please make sure your link ends in one of those formats. </div>
+  
+      <input class="form-control"  type="text"  [placeholder]="l('LinkToBookImage')" name="imageLink" [(ngModel)]="book.imageLink" #imageLink='ngModel' required pattern="^https?://(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|gif|png)$">
+      <div [hidden]="imageLink.valid || imageLink.pristine" class="alert alert-danger">{{l("ImageLinkSupportsOnly")}} </div>
     </div>
  
  

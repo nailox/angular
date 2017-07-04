@@ -54,7 +54,7 @@
 
   <editBookModal #editBookModal (modalSave)="getMyBooks()"></editBookModal>
   </div>
-<div class="paging">  
+<div class="text-center">  
    <pagination  [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" (pageChanged)="pageChanged($event)"></pagination>
 
  </div>

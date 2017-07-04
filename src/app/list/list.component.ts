@@ -1,32 +1,43 @@
-﻿import { Component, Injector, AfterViewInit, OnInit, ElementRef } from '@angular/core';
+﻿import { Component, Injector, AfterViewInit, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { BookServiceProxy, GetBooksOutput, BookDto } from '@shared/service-proxies/service-proxies';
+import { BookServiceProxy, GetBooksOutput, BookDto, UpdateBookInput, UpdateRatingInput,UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AbpSessionService } from '@abp/session/abp-session.service';
+import { StarRatingComponent } from './rating.component';
+
+
 
 //TODO: add localization and validation
 //add setBusy()
+//set rating per book. get rating from this.book.rating. add migration.
 @Component({
     selector: 'list',
     templateUrl: './list.component.html',
+    encapsulation:ViewEncapsulation.None ,
     animations: [appModuleAnimation()]
 })
 export class ListComponent extends AppComponentBase {
 
 
     books: BookDto[] = [];
+    bookUpdate: UpdateBookInput;
     filter: string = '';
     itemsPerPage: number = 4;
     skipCount: number = 0;
+ //   updateRating: UpdateRatingInput;
+   
 
     public totalItems: number;
     public currentPage: number = 1;
 
     userId = this.appSession.userId;
 
+   rating = 0;
+  
     constructor(
         injector: Injector,
         private _bookService: BookServiceProxy,
+        private _userService: UserServiceProxy,
         private _sessionService: AbpSessionService
 
     ) {
@@ -35,13 +46,15 @@ export class ListComponent extends AppComponentBase {
 
     ngOnInit(): void {
         console.log('ngOninit list.component');
+              
         this.getBooks();
+        
     }
 
     getBooks(): void {
-         
+           abp.ui.setBusy();
         this._bookService.getBooks(this.itemsPerPage, this.skipCount,this.userId, this.filter).subscribe((result) => {
-               abp.ui.setBusy();
+             
              
             this.books = result.books;
 
@@ -54,19 +67,47 @@ export class ListComponent extends AppComponentBase {
 
     delete(id: number): void {
      this.message.confirm(
-        'Are you sure you want to delete this book',
+        this.l('SureDelete'),
         isConfirmed => {
             if (isConfirmed) {
                 this._bookService.deleteBook(id).subscribe(() => {
-                    this.notify.info(this.l('SuccessfullyDeleted'));
+                    this.notify.info(this.l('DeletedSuccessfully'));
                        this.getBooks();
                 });
             }
         }
     ) 
 
-    }
-    
+}
+
+    ratingChanged(book, value){
+
+       let rate  = new UpdateRatingInput();
+       rate.id = book.id;
+       rate.newRating = value.ratingvalue;
+
+      //  this.updateRating = book;
+        
+        this._bookService.updateRating(rate)
+          .subscribe((data:boolean) => {
+          if (data){
+        this.notify.info(this.l('ThankYouForYourRating'));
+        
+     }
+     else{
+         this.notify.info(this.l('YouHaveAlreadyRatedForThisBook'));
+     }
+ });
+//  this.bookUpdate = book;
+//    this.bookUpdate.rating = value.ratingvalue;
+
+//    console.log('updated rating' + this.bookUpdate.rating)
+//           this._bookService.updateBook(this.bookUpdate)
+//             .subscribe(() => {
+//                this.notify.info(this.l('ThankYouForYourRating'));
+             
+//             });
+ }
 
     //paging
     public setPage(pageNo: number): void {
