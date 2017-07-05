@@ -1,7 +1,7 @@
 ﻿import { Component, Injector, AfterViewInit, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { BookServiceProxy, GetBooksOutput, BookDto, UpdateBookInput, UpdateRatingInput,UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BookServiceProxy, GetBooksOutput, BookDto, UpdateRatingInput,UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AbpSessionService } from '@abp/session/abp-session.service';
 import { StarRatingComponent } from './rating.component';
 
@@ -10,6 +10,7 @@ import { StarRatingComponent } from './rating.component';
 //TODO: add localization and validation
 //add setBusy()
 //set rating per book. get rating from this.book.rating. add migration.
+
 @Component({
     selector: 'list',
     templateUrl: './list.component.html',
@@ -20,19 +21,18 @@ export class ListComponent extends AppComponentBase {
 
 
     books: BookDto[] = [];
-    bookUpdate: UpdateBookInput;
     filter: string = '';
     itemsPerPage: number = 4;
     skipCount: number = 0;
- //   updateRating: UpdateRatingInput;
-   
+    updateRating: UpdateRatingInput;
+    rating = 0;
 
     public totalItems: number;
     public currentPage: number = 1;
 
     userId = this.appSession.userId;
 
-   rating = 0;
+
   
     constructor(
         injector: Injector,
@@ -86,27 +86,17 @@ export class ListComponent extends AppComponentBase {
        rate.id = book.id;
        rate.newRating = value.ratingvalue;
 
-      //  this.updateRating = book;
-        
         this._bookService.updateRating(rate)
           .subscribe((data:boolean) => {
           if (data){
         this.notify.info(this.l('ThankYouForYourRating'));
-        
      }
      else{
          this.notify.info(this.l('YouHaveAlreadyRatedForThisBook'));
      }
+    
  });
-//  this.bookUpdate = book;
-//    this.bookUpdate.rating = value.ratingvalue;
-
-//    console.log('updated rating' + this.bookUpdate.rating)
-//           this._bookService.updateBook(this.bookUpdate)
-//             .subscribe(() => {
-//                this.notify.info(this.l('ThankYouForYourRating'));
-             
-//             });
+   
  }
 
     //paging

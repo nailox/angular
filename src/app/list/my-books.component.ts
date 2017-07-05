@@ -1,14 +1,16 @@
-import { Component, Injector, AfterViewInit, OnInit, ElementRef } from '@angular/core';
+import { Component, Injector, AfterViewInit, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { BookServiceProxy, GetBooksOutput, BookDto } from '@shared/service-proxies/service-proxies';
+import { BookServiceProxy, GetBooksOutput, BookDto, UpdateRatingInput,UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AbpSessionService } from '@abp/session/abp-session.service';
+import { StarRatingComponent } from './rating.component';
 
 //TODO: add localization and validation
 //add setBusy()
 @Component({
     selector: 'my-books',
     templateUrl: './my-books.component.html',
+        encapsulation:ViewEncapsulation.None ,
     animations: [appModuleAnimation()]
 })
 export class MyBooksComponent extends AppComponentBase {
@@ -18,7 +20,8 @@ export class MyBooksComponent extends AppComponentBase {
     filter: string = '';
     itemsPerPage: number = 4;
     skipCount: number = 0;
-
+    updateRating: UpdateRatingInput;
+    rating = 0;
     
     public totalItems: number;
     public currentPage: number = 1;
@@ -63,7 +66,26 @@ export class MyBooksComponent extends AppComponentBase {
         }
     ) 
 
-    }
+}
+
+    ratingChanged(book, value){
+
+       let rate  = new UpdateRatingInput();
+       rate.id = book.id;
+       rate.newRating = value.ratingvalue;
+
+        this._bookService.updateRating(rate)
+          .subscribe((data:boolean) => {
+          if (data){
+        this.notify.info(this.l('ThankYouForYourRating'));
+     }
+     else{
+         this.notify.info(this.l('YouHaveAlreadyRatedForThisBook'));
+     }
+    
+ });
+   
+ }
 
   //paging
     public setPage(pageNo: number): void {

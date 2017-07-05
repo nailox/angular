@@ -6,9 +6,11 @@
      <div class="row " >
      <div class="col-md-6 eq" style="width: 35%;">
          <img src="{{book.imageLink}}" height="279" width="184" style="border:10px">
-         Rating:
+      Rating:  {{book.rating}}
          <br>
-         <br>
+         
+
+         <star-rating  ratingvalue="{{book.rating}}"  max="5" color="gold" fillcolor="gold"  (OnRatingChanged)="ratingChanged(book,$event)" > </star-rating>
              <div>
   <span>   
           <button  title="Click here to edit book details" (click)="editBookModal.show(book)"><i class="fa fa-pencil" aria-hidden="true"></i></button>
